@@ -11,9 +11,9 @@ hangman = ["      \n      \n      \n      \n", "    | \n    | \n    | \n   _|_\n
 
 
 def menu():
-    os.system('cls') if "windows" in os.name.lower() else os.system('clear')
+    os.system('cls') if "nt" in os.name.lower() else os.system('clear')
     choice = 0
-    while not 5 >= choice > 1:
+    while not 6 >= choice >= 1:
         choice = int(raw_input("1: Start Game\n2: Add Word\n3: List Words\n4: Remove Words\n"
                                "5: List words by given length\n6: Exit\n\nChoose: "))
     if choice == 1:
@@ -116,7 +116,7 @@ def start_game(lives=0, game_letters=letters):
     except ValueError:
         word = get_random_word()
     while lives < 10:
-        os.system('cls') if "windows" in os.name.lower() else os.system('clear')
+        os.system('cls') if "nt" in os.name.lower() else os.system('clear')
         game_word = get_game_word(word, guessed_letters)
         check_win(game_word, word)
         print hangman[lives]
