@@ -2,6 +2,7 @@ import os
 import random
 
 wordlist = open('wordlist.txt')
+words = wordlist.readlines()
 letters = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z "
 hangmans = ["      \n      \n      \n      \n", "    | \n    | \n    | \n   _|_\n", "    | \n    | \n    | \n   _|_\n",
             "----| \n    | \n    | \n   _|_\n", "----| \n o  | \n    | \n   _|_\n", "----| \n o  | \n |  | \n   _|_\n",
@@ -28,20 +29,29 @@ def get_game_word(word, letters_guessed):
 def check_win(game_word, word):
     if '_' not in game_word:
         print "You have won, the word was %s!" % word
-        if raw_input("Do you want to play again? y/n:") in ['y', 'Y']:
-            start_game()
-        else:
-            exit()
+        play_again()
+
+
+def play_again():
+    start_game() if raw_input("Do you want to play again? y/n:") in ['y', 'Y'] else exit()
+
+
+def get_random_word(length=0):
+    random_word = random.choice(words)
+    if length > 0:
+        while len(random_word) != length + 1:
+            random_word = random.choice(words)
+    return random_word.strip()
 
 
 def start_game(lives=0, game_letters=letters):
     guessed_letters = []
-    word = random.choice(wordlist.readlines()).strip()
+    try:
+        word = get_random_word(int(raw_input("How long the word should be?")))
+    except ValueError:
+        word = get_random_word()
     while lives < 10:
-        if "windows" in os.name.lower():
-            os.system('cls')
-        else:
-            os.system('clear')
+        os.system('cls') if "windows" in os.name.lower() else os.system('clear')
         game_word = get_game_word(word, guessed_letters)
         check_win(game_word, word)
         print hangmans[lives]
@@ -57,6 +67,7 @@ def start_game(lives=0, game_letters=letters):
         if game_word == get_game_word(word, guessed_letters):
             lives += 1
     print "You have lost the game, the word was %s" % word
+    play_again()
 
 
 start_game()
